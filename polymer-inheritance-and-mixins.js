@@ -85,7 +85,7 @@ function AspectsFor(prototype) {
 
 
 function UnicornPrototype(extendedPrototype) {
-  var parentPrototype = SuperPrototypeFor(prototype);
+  var parentPrototype = ParentPrototypeFor(prototype);
   var aspects = AspectsFor(prototype);
   var hierarchy = aspects.concat(extendedPrototype);
   
