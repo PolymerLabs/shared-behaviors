@@ -74,7 +74,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       };
 
-      var XFoo = Polymer(Polymer.Base.extend({}, xFoo));
+      var XFoo = Polymer({
+        mixins: [xFoo]
+      });
 
       var xBar = {
         is: 'x-bar',
@@ -91,7 +93,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       };
 
-      var XBar = Polymer(Polymer.Base.extend({}, xBar));
+      var XBar = Polymer({
+        mixins: [xBar]
+      });
 
       var xWithFooAndBar = Polymer.bonded({
         is: 'x-with-foo-and-bar',
@@ -108,7 +112,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         ],
 
         ready: function() {
-          debugger;
           console.log('x-with-foo-and-bar ready');
         },
 
