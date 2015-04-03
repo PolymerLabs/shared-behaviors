@@ -15,13 +15,6 @@ var PolymerObjectProperties = [
 ];
 
 
-function Dictionary(array) {
-  return array.reduce(function(dictionary, item) {
-    dictionary[item] = true;
-  }, {});
-}
-
-
 function Extend2D(parentPrototype, extendedPrototype, nestedExtendingObjectNames) {
   var childPrototype = parentPrototype ? Object.create(parentPrototype) : {};
   
