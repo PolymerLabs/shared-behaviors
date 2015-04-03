@@ -67,12 +67,20 @@ function SpreadMethod(instances, method) {
 
 
 function ParentPrototypeFor(prototype) {
-  if (prototype.extends && prototype.extends instanceof Function) {
-    return prototype.extends;
+  if (!prototype.extends) {
+    return {};
   }
   
-  if (prototype.extends && prototype.extends.indexOf('-')) {
-    return document.createElement(prototype.extends).constructor;
+  if (typeof prototype.extends === 'string' && prototype.extends.indexOf('-') > -1) {
+    return document.createElement(prototype.extends).constructor.prototype;
+  }
+  
+  if (prototype.extends instanceof Function) {
+    return prototype.extends.prototype;
+  }
+  
+  if (prototype.extends instanceof Object) {
+    return prototype.extends;
   }
   
   return {};
