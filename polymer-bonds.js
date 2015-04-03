@@ -93,11 +93,5 @@ function BondedPrototype(extendedPrototype) {
 
 
 function BondedPolymer(prototype) {
-  var molecule = BondedPrototype(prototype);
-  
-  if (Polymer.Base.isPrototypeOf(molecule)) {
-    return document.registerElement(molecule.is, molecule);
-  }
-  
-  return Polymer(molecule);
+  return Polymer(BondedPrototype(prototype));
 }
