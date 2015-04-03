@@ -64,13 +64,13 @@ function BondsFor(prototype) {
 }
 
 
-function BondedPrototype(extendedPrototype) {
-  var hierarchy = BondsFor(extendedPrototype).concat(extendedPrototype);
+function Bonded(prototype) {
+  var hierarchy = BondsFor(prototype).concat(prototype);
   
-  var childPrototype = hierarchy.reduce(function(childPrototype, nextExtendedPrototype) {
+  var childPrototype = hierarchy.reduce(function(childPrototype, nextPrototype) {
     return Extend2D(
       childPrototype,
-      nextExtendedPrototype,
+      nextPrototype,
       PolymerObjectProperties
     );
   }, {});
@@ -82,9 +82,4 @@ function BondedPrototype(extendedPrototype) {
   });
   
   return childPrototype;
-}
-
-
-function BondedPolymer(prototype) {
-  return Polymer(BondedPrototype(prototype));
 }
