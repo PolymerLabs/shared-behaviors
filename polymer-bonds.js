@@ -22,11 +22,11 @@ function Dictionary(array) {
 }
 
 
-function Inherit2D(parentPrototype, extendedPrototype, nestedInheritingObjectNames) {
+function Extend2D(parentPrototype, extendedPrototype, nestedExtendingObjectNames) {
   var childPrototype = parentPrototype ? Object.create(parentPrototype) : {};
   
-  if (nestedInheritingObjectNames) {
-    nestedInheritingObjectNames.forEach(function(property) {
+  if (nestedExtendingObjectNames) {
+    nestedExtendingObjectNames.forEach(function(property) {
       childPrototype[property] = Inherit2D(
         parentPrototype[property],
         extendedPrototype[property]
@@ -66,44 +66,22 @@ function SpreadMethod(instances, method) {
 }
 
 
-function ParentPrototypeFor(prototype) {
-  if (!prototype.extends) {
-    return {};
-  }
-  
-  if (typeof prototype.extends === 'string' && prototype.extends.indexOf('-') > -1) {
-    return document.createElement(prototype.extends).constructor.prototype;
-  }
-  
-  if (prototype.extends instanceof Function) {
-    return prototype.extends.prototype;
-  }
-  
-  if (prototype.extends instanceof Object) {
-    return prototype.extends;
-  }
-  
-  return {};
+function BondsFor(prototype) {
+  return prototype.bonds || [];
 }
 
 
-function AspectsFor(prototype) {
-  return prototype.aspects || [];
-}
-
-
-function UnicornPrototype(extendedPrototype) {
-  var parentPrototype = ParentPrototypeFor(extendedPrototype);
-  var aspects = AspectsFor(extendedPrototype);
+function BondedPrototype(extendedPrototype) {
+  var bonds = BondsFor(extendedPrototype);
   var hierarchy = aspects.concat(extendedPrototype);
   
   var childPrototype = hierarchy.reduce(function(childPrototype, nextExtendedPrototype) {
-    return Inherit2D(
+    return Extend2D(
       childPrototype,
       nextExtendedPrototype,
       PolymerObjectProperties
     );
-  }, Object.create(parentPrototype));
+  }, {});
   
   PolymerLifecycleMethods.forEach(function(method) {
     if (method in childPrototype) {
@@ -115,12 +93,12 @@ function UnicornPrototype(extendedPrototype) {
 }
 
 
-function FancyPolymer(prototype) {
-  var unicorn = UnicornPrototype(prototype);
+function BondedPolymer(prototype) {
+  var molecule = BondedPrototype(prototype);
   
-  if (Polymer.Base.isPrototypeOf(unicorn)) {
-    return document.registerElement(unicorn.is, unicorn);
+  if (Polymer.Base.isPrototypeOf(molecule)) {
+    return document.registerElement(molecule.is, molecule);
   }
   
-  return Polymer(unicorn);
+  return Polymer(molecule);
 }
