@@ -27,7 +27,7 @@ function Inherit2D(parentPrototype, extendedPrototype, nestedInheritingObjectNam
   
   if (nestedInheritingObjectNames) {
     nestedInheritingObjectNames.forEach(function(property) {
-      childPrototype[property] = inherit2D(
+      childPrototype[property] = Inherit2D(
         parentPrototype[property],
         extendedPrototype[property]
       );
