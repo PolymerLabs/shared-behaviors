@@ -1,0 +1,126 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>iron-bonds demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../../polymer/polymer.html">
+    <link rel="import" href="../iron-bonds.html">
+
+    <style>
+      body {
+        margin: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <dom-module id="x-foo">
+      <template>
+        <h1>X-Foo</h1>
+        <div>
+          <span>el.foo =&gt; </span><span>{{foo}}</span>
+        </div>
+      </template>
+    </dom-module>
+
+    <dom-module id="x-bar">
+      <template>
+        <h1>X-Bar</h1>
+        <div>
+          <span>el.bar =&gt; </span><span>{{bar}}</span>
+        </div>
+      </template>
+    </dom-module>
+
+    <dom-module id="x-with-foo-and-bar">
+      <template>
+        <h1>X-With-Foo-And-Bar</h1>
+        <div>
+          <span>el.foo =&gt; </span><span>{{foo}}</span>
+        </div>
+        <div>
+          <span>el.bar =&gt; </span><span>{{bar}}</span>
+        </div>
+        <div>
+          <span>el.foobar =&gt; </span><span>{{foobar}}</span>
+        </div>
+      </template>
+    </dom-module>
+
+    <script>
+      var xFoo = {
+        is: 'x-foo',
+
+        properties: {
+          foo: {
+            type: String,
+            value: 'foo'
+          }
+        },
+
+        ready: function() {
+          console.log('foo ready');
+        }
+      };
+
+      var XFoo = Polymer(Polymer.Base.extend({}, xFoo));
+
+      var xBar = {
+        is: 'x-bar',
+
+        properties: {
+          bar: {
+            type: String,
+            value: 'bar'
+          }
+        },
+
+        ready: function() {
+          console.log('bar ready');
+        }
+      };
+
+      var XBar = Polymer(Polymer.Base.extend({}, xBar));
+
+      var xWithFooAndBar = Polymer.bonded({
+        is: 'x-with-foo-and-bar',
+
+        properties: {
+          foobar: {
+            computed: 'computeFoobar(foo, bar)'
+          }
+        },
+
+        bonds: [
+          xFoo,
+          xBar
+        ],
+
+        ready: function() {
+          debugger;
+          console.log('x-with-foo-and-bar ready');
+        },
+
+        computeFoobar: function(foo, bar) {
+          return foo + bar;
+        }
+      });
+    </script>
+
+    <x-foo></x-foo>
+    <x-bar></x-bar>
+    <x-with-foo-and-bar></x-with-foo-and-bar>
+
+  </body>
+</html>
