@@ -60,7 +60,13 @@ function SpreadMethod(instances, method) {
 
 
 function BondsFor(prototype) {
-  return prototype.bonds || [];
+  return (prototype.bonds || []).map(function(bond) {
+    if (bond instanceof Function) {
+      return bond.prototype;
+    }
+    
+    return bond;
+  });
 }
 
 
