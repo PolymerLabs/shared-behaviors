@@ -72,8 +72,7 @@ function BondsFor(prototype) {
 
 
 function BondedPrototype(extendedPrototype) {
-  var bonds = BondsFor(extendedPrototype);
-  var hierarchy = aspects.concat(extendedPrototype);
+  var hierarchy = BondsFor(extendedPrototype).concat(extendedPrototype);
   
   var childPrototype = hierarchy.reduce(function(childPrototype, nextExtendedPrototype) {
     return Extend2D(
