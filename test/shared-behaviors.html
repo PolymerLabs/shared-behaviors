@@ -10,49 +10,49 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>iron-bonds basic tests</title>
+  <title>shared behaviors basic tests</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
   <script src="../../test-fixture/test-fixture-mocha.js"></script>
 
-  <link rel="import" href="../iron-bonds.html">
+  <link rel="import" href="../shared-behaviors.html">
   <link rel="import" href="../../test-fixture/test-fixture.html">
 </head>
 <body>
 
   <script>
-    var xTrivialBond = {
+    var xTrivialBehavior = {
       foo: 'bar'
     };
 
-    Polymer.bonded({
-      is: 'x-trivial-bonded',
+    Polymer.withBehaviors({
+      is: 'x-trivial-behaving',
 
-      bonds: [
-        xTrivialBond
+      behaviors: [
+        xTrivialBehavior
       ]
     });
   </script>
 
-  <test-fixture id="TrivialBond">
+  <test-fixture id="TrivialBehavior">
     <template>
-      <x-trivial-bonded></x-trivial-bonded>
+      <x-trivial-behaving></x-trivial-behaving>
     </template>
   </test-fixture>
 
   <script>
-    suite('iron-bonds', function() {
-      var bondedElement;
+    suite('shared behaviors', function() {
+      var behavingElement;
 
-      suite('a trivial bond', function() {
+      suite('a trivial behavior', function() {
         setup(function() {
-          bondedElement = fixture('TrivialBond');
+          behavingElement = fixture('TrivialBehavior');
         });
 
-        test('extends the prototype with the bond', function() {
-          expect(bondedElement.foo).to.be.eql('bar');
+        test('extends the prototype with the behavior', function() {
+          expect(behavingElement.foo).to.be.eql('bar');
         });
       });
     });

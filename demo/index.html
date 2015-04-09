@@ -12,11 +12,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-    <title>iron-bonds demo</title>
+    <title>shared behaviors demo</title>
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../../polymer/polymer.html">
-    <link rel="import" href="../iron-bonds.html">
+    <link rel="import" href="../shared-behaviors.html">
 
     <style>
       body {
@@ -58,10 +58,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </template>
     </dom-module>
 
+    <dom-module id="x-double-prime">
+      <template>
+        <h1>X-Double-Prime</h1>
+        <div>
+          <span>el.foo =&gt; </span><span>{{foo}}</span>
+        </div>
+        <div>
+          <span>el.bar =&gt; </span><span>{{bar}}</span>
+        </div>
+        <div>
+          <span>el.foobar =&gt; </span><span>{{foobar}}</span>
+        </div>
+      </template>
+    </dom-module>
     <script>
       var xFoo = {
-        is: 'x-foo',
-
         properties: {
           foo: {
             type: String,
@@ -74,8 +86,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       };
 
-      var XFoo = Polymer({
-        mixins: [xFoo]
+      var XFoo = Polymer.withBehaviors({
+        is: 'x-foo',
+
+        behaviors: [xFoo]
       });
 
       var xBar = {
@@ -93,20 +107,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       };
 
-      var XBar = Polymer({
-        mixins: [xBar]
+      var XBar = Polymer.withBehaviors({
+
+        behaviors: [xBar]
       });
 
-      var xWithFooAndBar = Polymer.bonded({
-        is: 'x-with-foo-and-bar',
-
+      var xWithFooAndBar = {
         properties: {
           foobar: {
             computed: 'computeFoobar(foo, bar)'
           }
         },
 
-        bonds: [
+        behaviors: [
           xFoo,
           xBar
         ],
@@ -118,12 +131,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         computeFoobar: function(foo, bar) {
           return foo + bar;
         }
+      };
+
+      var XWithFooAndBar = Polymer.withBehaviors({
+        is: 'x-with-foo-and-bar',
+
+        behaviors: [
+          xWithFooAndBar
+        ]
+      });
+
+      var XDoublePrime = Polymer.withBehaviors({
+        is: 'x-double-prime',
+
+        behaviors: [
+          xWithFooAndBar
+        ],
+
+        ready: function() {
+          console.log('x-double-prime ready');
+        }
       });
     </script>
 
     <x-foo></x-foo>
     <x-bar></x-bar>
     <x-with-foo-and-bar></x-with-foo-and-bar>
-
+    <x-double-prime></x-double-prime>
   </body>
 </html>

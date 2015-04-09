@@ -64,31 +64,45 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
     function SpreadMethod(instances, method) {
+      var methods = (instances || []).map(function(instance) {
+        return instance[method];
+      });
+
       return function() {
         var args = arguments;
 
-        instances && instances.forEach(function(instance) {
-          if (method in instance) {
-            instance[method].apply(this, args);
+        methods.forEach(function(method) {
+          if (method) {
+            method.apply(this, args);
           }
         }, this);
       };
     }
 
 
-    function BondsFor(prototype) {
-      return (prototype.bonds || []).map(function(bond) {
-        if (bond instanceof Function) {
-          return bond.prototype;
+    function BehaviorsFor(prototype) {
+      var behaviors = [];
+      var length = prototype.behaviors ? prototype.behaviors.length : 0;
+      var behavior;
+      var index;
+
+      for (index = 0; index < length; ++index) {
+        behavior = prototype.behaviors[index];
+
+        if (behavior instanceof Function) {
+          behavior = behavior.prototype;
         }
 
-        return bond;
-      });
+        behaviors = behaviors.concat(BehaviorsFor(behavior));
+        behaviors.push(behavior);
+      }
+
+      return behaviors;
     }
 
 
-    function Bonded(prototype) {
-      var hierarchy = BondsFor(prototype).concat(prototype);
+    function ApplyBehaviors(prototype, base) {
+      var hierarchy = (base || []).concat(BehaviorsFor(prototype), prototype);
 
       var childPrototype = hierarchy.reduce(function(childPrototype, nextPrototype) {
         return Extend2D(
@@ -107,17 +121,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       return childPrototype;
     }
 
+    Polymer.behavior = ApplyBehaviors;
 
-    Polymer.bonded = function(prototype) {
+    Polymer.withBehaviors = function(prototype) {
       // TODO(cdata): Use this simpler approach if/when `Polymer` is updated
       // to keep prototype chains intact:
-      // return Polymer(Bonded(prototype));
+      // return Polymer(ApplyBehaviors(prototype));
 
-      prototype.bonds = prototype.bonds || [];
-      prototype.bonds.unshift(Polymer.Base);
-      prototype.bonds.unshift(HTMLElement.prototype);
-
-      prototype = Bonded(prototype);
+      prototype.behaviors = prototype.behaviors || [];
+      prototype = ApplyBehaviors(prototype, [
+        HTMLElement.prototype,
+        Polymer.Base
+      ]);
       prototype.registerCallback();
 
       document.registerElement(prototype.is, {
