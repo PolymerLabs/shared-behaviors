@@ -81,8 +81,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         },
 
+        listeners: {
+          'click': 'onFooClick',
+          'mousedown': 'onFooMousedown'
+        },
+
         ready: function() {
           console.log('foo ready');
+        },
+
+        onFooClick: function() {
+          console.log('foo click handler');
+        },
+
+        onFooMousedown: function() {
+          console.log('foo mousedown handler');
         }
       };
 
@@ -102,8 +115,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         },
 
+        listeners: {
+          'click': 'onBarClick',
+          'mouseup': 'onBarMouseup'
+        },
+
         ready: function() {
           console.log('bar ready');
+        },
+
+        onBarClick: function() {
+          console.log('bar click handler');
+        },
+
+        onBarMouseup: function() {
+          console.log('bar mouseup handler');
         }
       };
 
