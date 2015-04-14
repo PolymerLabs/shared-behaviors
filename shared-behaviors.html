@@ -21,7 +21,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     var PolymerObjectProperties = [
       'properties',
-      'listeners',
       'observers',
       'hostAttributes',
       'computed'
@@ -101,6 +100,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
 
 
+    function CollectPropertyValues(instances, property) {
+      return instances.reduce(function(values, instance) {
+        if (instance.hasOwnProperty(property)) {
+          values.push(instance[property]);
+        }
+
+        return values;
+      }, []);
+    }
+
+
+    function MarshalListeners(instances) {
+      var listenerMaps = CollectPropertyValues(instances, 'listeners');
+
+      return function() {
+        listenerMaps.forEach(function(listeners) {
+          this._listenListeners(listeners);
+        }, this);
+
+        this._listenKeyPresses(this.keyPresses);
+      };
+    }
+
+
     function ApplyBehaviors(prototype, base) {
       var hierarchy = (base || []).concat(BehaviorsFor(prototype), prototype);
 
@@ -118,10 +141,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       });
 
+      childPrototype._marshalListeners = MarshalListeners(hierarchy);
+
       return childPrototype;
     }
 
-    Polymer.behavior = ApplyBehaviors;
 
     Polymer.withBehaviors = function(prototype) {
       // TODO(cdata): Use this simpler approach if/when `Polymer` is updated
